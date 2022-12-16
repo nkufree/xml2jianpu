@@ -1,0 +1,20 @@
+{
+  "name": "d3project",
+  "version": "1.4.0",
+  "description": "A JavaScript project",
+  "main": "./dist/index.js",
+  "scripts": {
+    "start": "node ./node_modules/parcel-bundler/bin/cli serve ./src/index.html --port 8080",
+    "build": "node ./node_modules/parcel-bundler/bin/cli build ./src/index.html --out-dir ./dist/"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "parcel-bundler": "^1.12.5"
+  },
+  "dependencies": {
+    "d3": "^7.4.4",
+    "fast-xml-parser": "^4.0.12"
+  }
+}
