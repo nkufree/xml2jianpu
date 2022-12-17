@@ -1,5 +1,5 @@
 # xml2jianpu
-这个项目用来将musicxml文件转换为简谱（以三色绘恋为例）。
+这个项目用来将musicxml文件转换为简谱（以三色绘恋为例）。暂不支持重复、跳跃类符号。  
 由于在网上找不到三色绘恋的简谱，所以就自己做了一个简单版的。效果图如下。
 ![image](https://user-images.githubusercontent.com/120734145/208229550-b62d8c66-f729-4e9c-8f9a-1ac172a2b828.png)  
 首先，从 https://musescore.org/zh-hans 下载musescore（一个制谱软件）。然后自己做一个五线谱，导出为不压缩的nusicxml格式。  
