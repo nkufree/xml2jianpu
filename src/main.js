@@ -139,7 +139,7 @@ function jianpu(data)
       var number = note2number(d);
       var divisions = partAttr.divisions;
       var dy = 0;//绘制下划线和点时的位置偏移
-      
+      var ddy = 0//绘制上方点和线时位置偏移
       //console.log(number);
       //绘制音符
       d3.select(this)
@@ -292,6 +292,7 @@ function jianpu(data)
         dy+=5;
       }
       else if(number.octave == 5)
+      {
         d3.select(this)
         .append("circle")
         .attr("transform",`translate(${marginLeft+start+reset*noteSpacing},${marginTop+lineIndex*eachHeight})`)
@@ -299,6 +300,8 @@ function jianpu(data)
         .attr("cy",-18)
         .attr("r",1.5)
         .attr("fill","black");
+        ddy+=5;
+      }
       //绘制连音的曲线
       if(number.tied)
       {
@@ -306,12 +309,13 @@ function jianpu(data)
         if(tiePath[0]==-1)
         {
           tiePath[0] = marginLeft+start+reset*noteSpacing;
-          tiePath[1] = marginTop+lineIndex*eachHeight+dy+4;
+          tiePath[1] = marginTop+lineIndex*eachHeight-(ddy+17);
         }
         else if(tiePath[2]==-1)
         {
           tiePath[2] = marginLeft+start+reset*noteSpacing;
-          tiePath[3] = marginTop+lineIndex*eachHeight+dy+4;
+          tiePath[3] = marginTop+lineIndex*eachHeight-(ddy+17);
+          //如果两个音符在一行，绘制一条曲线；如果在两行，绘制两条曲线。
           if(Math.abs(tiePath[3] - tiePath[1]) < 20)
           {
             d3.select(this)
@@ -325,7 +329,7 @@ function jianpu(data)
         }
         else if(Math.abs(tiePath[3] - tiePath[1]) > 20)
         {
-          let path1 = [tiePath[0],tiePath[1],tiePath[0]+20,tiePath[1]];
+          let path1 = [tiePath[0],tiePath[1],tiePath[0]+noteSpacing,tiePath[1]];
           let path2 = [tiePath[2]-10,tiePath[3],tiePath[2],tiePath[3]];
           d3.select(this)
           .append("path")
@@ -349,22 +353,21 @@ function jianpu(data)
       {
         if(i != 0 && i+1 < length && durList[i-1] == number.dur && number.dur == durList[i+1])
         {
-          var dTop = 0;//绘制三连音时的位置偏移
           if(octList[i-1] == 5 || octList[i] == 5 || octList[i+1] == 5)
-            dTop = 5;
+            ddy = 5;
           d3.select(this)
           .append("path")
           .attr("fill","none")
           .attr("stroke","black")
           .attr("stroke-width","1px")
           .attr("transform",`translate(${marginLeft+start+reset*noteSpacing},${marginTop+lineIndex*eachHeight})`)
-          .attr("d",`M ${-noteSpacing} ${-(16+dTop)} L ${-noteSpacing} ${-(19+dTop)} L ${noteSpacing} ${-(19+dTop)} L ${noteSpacing} ${-(16+dTop)}`);
+          .attr("d",`M ${-noteSpacing} ${-(16+ddy)} L ${-noteSpacing} ${-(19+ddy)} L ${noteSpacing} ${-(19+ddy)} L ${noteSpacing} ${-(16+ddy)}`);
           d3.select(this)
           .append("text")
           .attr("font-size",10)
           .attr("text-anchor","middle")
           .attr("x",0)
-          .attr("y",-(16+dTop))
+          .attr("y",-(16+ddy))
           .attr("transform",`translate(${marginLeft+start+reset*noteSpacing},${marginTop+lineIndex*eachHeight})`)
           .text("3");
         }
@@ -384,7 +387,7 @@ function jianpu(data)
     else if(p[3] > p[1] && p[3] - p[1] < 20) 
       p[1] = p[3];
     var dx = p[2] - p[0];
-    return `M ${p[0]} ${p[1]} C ${p[0]+dx/4} ${p[1]+4} ${p[2]-dx/4} ${p[1]+4} ${p[2]} ${p[1]}`;
+    return `M ${p[0]} ${p[1]} C ${p[0]+dx/4} ${p[1]-4} ${p[2]-dx/4} ${p[1]-4} ${p[2]} ${p[1]}`;
   }
   function note2number(note)
   {
