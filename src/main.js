@@ -88,10 +88,20 @@ function jianpu(data)
   .attr("text-anchor","middle")
   .attr("font-size",30)
   .text("三色绘恋");
-  g.append("text")
+  var textD = g.append("text")
   .attr("transform",`translate(${marginLeft},${titleTop+60})`)
-  .attr("font-size",18)
-  .text("1 = bD   4/4");
+  .attr("font-size",18);
+  textD.append("tspan")
+  .text("1=")
+  textD.append("tspan")
+  .attr("baseline-shift","super")
+  .attr("font-size",15)
+  .text("b")
+  textD.append("tspan")
+  .text("D")
+  textD.append("tspan")
+  .attr("dx",20)
+  .text("4/4")
   g.append("text")
   .attr("transform",`translate(${marginLeft},${titleTop+90})`)
   .attr("font-size",18)
@@ -144,11 +154,34 @@ function jianpu(data)
       var ddy = 0//绘制上方点和线时位置偏移
       //console.log(number);
       //绘制音符
-      d3.select(this)
+      var noteNumberIs = d3.select(this)
       .append("text")
       .attr("text-anchor","middle")
-      .attr("transform",`translate(${marginLeft+start+(i+dx)*noteSpacing},${marginTop+lineIndex*eachHeight})`)
-      .text(number.text);
+      .attr("transform",`translate(${marginLeft+start+(i+dx)*noteSpacing},${marginTop+lineIndex*eachHeight})`);
+      if(number.text.length == 1)
+        noteNumberIs.text(number.text);
+      else
+      {
+        noteNumberIs.append("tspan")
+        .attr("baseline-shift","super")
+        .attr("dy",()=>{
+          if(number.text[0] == "#")
+            return 8;
+          else
+            return 4;
+        })
+        .attr("font-size",12)
+        .attr("dx",-5)
+        .text(number.text[0]);
+        noteNumberIs.append("tspan")
+        .attr("dy",()=>{
+          if(number.text[0] == "#")
+            return -8;
+          else
+            return -4;
+        })
+        .text(number.text[1]);
+      }
       //绘制附点
       if(d.dot!=undefined && number.duration<2*divisions)
       {
@@ -258,9 +291,9 @@ function jianpu(data)
         if(d.beam != undefined)
         {
           if(d.beam[0] == "begin")
-            eighthPath = -noteSpacing;
+            eighthPath = -noteSpacing*number.text.length;
           else if(d.beam[0] == "continue")
-            eighthPath -= noteSpacing;
+            eighthPath -= noteSpacing*number.text.length;
           else if(d.beam[0] == "end")
           {
             d3.select(this)
