@@ -39,6 +39,8 @@ function jianpu(data)
   var marginLeft = 100;//左边距
   var marginTop = 100;//上边距
   var tiePath = [-1,-1,-1,-1];//连音始末位置
+  var eighthPath = 0; //八分音符下划线的始末位置
+  var sixteenthPath = 0;//16分音符下划线的始末位置
   var titleTop = 30;
   var initSpacing = 18;
   var noteSpacing = 20;
@@ -89,7 +91,7 @@ function jianpu(data)
   g.append("text")
   .attr("transform",`translate(${marginLeft},${titleTop+60})`)
   .attr("font-size",18)
-  .text("1 = bD");
+  .text("1 = bD   4/4");
   g.append("text")
   .attr("transform",`translate(${marginLeft},${titleTop+90})`)
   .attr("font-size",18)
@@ -181,6 +183,8 @@ function jianpu(data)
       let octList = d3.map(n,d=>note2number(d.__data__).octave);
       if(number.dur == divisions /2)
       {
+        console.log(d);
+        
         d3.select(this)
         .append("line")
         .attr("transform",`translate(${marginLeft+start+(i+dx)*noteSpacing},${marginTop+lineIndex*eachHeight})`)
@@ -190,20 +194,43 @@ function jianpu(data)
         .attr("y2",5)
         .attr("stroke","black")
         .attr("stroke-width","1px");
-        
-        durList.push(0);
-        //console.log(durList);
-        if((i == 0 && durList[i] == durList[i+1])||(i != 0 && durList[i] != durList[i-1] && durList[i+1] == durList[i]))
+
+        if(d.beam != undefined)
         {
-          d3.select(this)
-        .append("line")
-        .attr("transform",`translate(${marginLeft+start+(i+dx)*noteSpacing},${marginTop+lineIndex*eachHeight})`)
-        .attr("x1",0)
-        .attr("y1",5)
-        .attr("x2",noteSpacing)
-        .attr("y2",5)
-        .attr("stroke","black")
-        .attr("stroke-width","1px");
+          if(d.beam == "begin")
+            eighthPath = -noteSpacing;
+          else if(d.beam == "continue")
+            eighthPath -= noteSpacing;
+          else if(d.beam == "end")
+          {
+            d3.select(this)
+            .append("line")
+            .attr("transform",`translate(${marginLeft+start+(i+dx)*noteSpacing},${marginTop+lineIndex*eachHeight})`)
+            .attr("x1",0)
+            .attr("y1",5)
+            .attr("x2",eighthPath)
+            .attr("y2",5)
+            .attr("stroke","black")
+            .attr("stroke-width","1px");
+            eighthPath = 0;
+          }
+        }
+        else
+        {
+          durList.push(0);
+          //console.log(durList);
+          if((i == 0 && durList[i] == durList[i+1])||(i != 0 && durList[i] != durList[i-1] && durList[i+1] == durList[i]))
+          {
+            d3.select(this)
+          .append("line")
+          .attr("transform",`translate(${marginLeft+start+(i+dx)*noteSpacing},${marginTop+lineIndex*eachHeight})`)
+          .attr("x1",0)
+          .attr("y1",5)
+          .attr("x2",noteSpacing)
+          .attr("y2",5)
+          .attr("stroke","black")
+          .attr("stroke-width","1px");
+          }
         }
 
         dy = 5;
@@ -228,6 +255,44 @@ function jianpu(data)
         .attr("y2",8)
         .attr("stroke","black")
         .attr("stroke-width","1px");
+        if(d.beam != undefined)
+        {
+          if(d.beam[0] == "begin")
+            eighthPath = -noteSpacing;
+          else if(d.beam[0] == "continue")
+            eighthPath -= noteSpacing;
+          else if(d.beam[0] == "end")
+          {
+            d3.select(this)
+            .append("line")
+            .attr("transform",`translate(${marginLeft+start+(i+dx)*noteSpacing},${marginTop+lineIndex*eachHeight})`)
+            .attr("x1",0)
+            .attr("y1",5)
+            .attr("x2",eighthPath)
+            .attr("y2",5)
+            .attr("stroke","black")
+            .attr("stroke-width","1px");
+            eighthPath = 0;
+          }
+          if(d.beam[1] == "begin")
+            sixteenthPath = -noteSpacing;
+          else if(d.beam[1] == "continue")
+            sixteenthPath -= noteSpacing;
+          else if(d.beam[1] == "end")
+          {
+            d3.select(this)
+            .append("line")
+            .attr("transform",`translate(${marginLeft+start+(i+dx)*noteSpacing},${marginTop+lineIndex*eachHeight})`)
+            .attr("x1",0)
+            .attr("y1",8)
+            .attr("x2",eighthPath)
+            .attr("y2",8)
+            .attr("stroke","black")
+            .attr("stroke-width","1px");
+            sixteenthPath = 0;
+          }
+        }
+        else{
         if((i == 0 && durList[i] == durList[i+1])||(i != 0 && durList[i] != durList[i-1] && durList[i+1] == durList[i]))
         {
           d3.select(this)
@@ -248,7 +313,7 @@ function jianpu(data)
         .attr("y2",8)
         .attr("stroke","black")
         .attr("stroke-width","1px");
-        }
+        }}
         dy = 8;
       }
       else if(number.dur > divisions)
@@ -391,7 +456,16 @@ function jianpu(data)
   }
   function note2number(note)
   {
-    var keyAlter =  [{fifth:0,key:"C",alter:0},{fifth:-5,key:"bD",alter:-1},{fifth:-4,key:"D",alter:-2}] ;
+    var keyAlter =  [{fifth:7,key:"#C",alter:-1},
+                      {fifth:0,key:"C",alter:0},
+                      {fifth:-7,key:"bC",alter:1},
+                      {fifth:-5,key:"bD",alter:-1},
+                      {fifth:-4,key:"D",alter:-2},
+                      {fifth:-3,key:"bE",alter:-3},
+                      {fifth:4,key:"E",alter:-4},
+                      {fifth:5,key:"B",alter:1},
+                      {fifth:-1,key:"F",alter:-5},
+                      {fifth:1,key:"G",alter:5}] ;
     var stepList = [ "1","#1","2","#2","3","4","#4","5","#5","6","#6","7" ];
     var step2num = [ {step:"C",num:0},{step:"D",num:2},{step:"E",num:4},
                     {step:"F",num:5},{step:"G",num:7},{step:"A",num:9},{step:"B",num:11} ];
