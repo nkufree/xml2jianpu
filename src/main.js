@@ -20,8 +20,8 @@ function jianpu(data)
   var str = s.serializeToString(data);
   const parser = new XMLParser();
   var musicJson = parser.parse(str);
-  console.log("jobj",musicJson.scorepartwise.part.measure);
-  var measures = musicJson.scorepartwise.part.measure;
+  console.log("jobj",musicJson["score-partwise"].part.measure);
+  var measures = musicJson["score-partwise"].part.measure;
   var  width=(window.innerWidth||document.documentElement.clientWidth||document.body.clientWidth);
   var  height=(window.innerHeight||document.documentElement.clientHeight||document.body.clientHeight);
   var partAttr = measures[0].attributes;
