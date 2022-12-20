@@ -4,7 +4,6 @@
 ![image](https://user-images.githubusercontent.com/120734145/208229550-b62d8c66-f729-4e9c-8f9a-1ac172a2b828.png)  
 首先，从 https://musescore.org/zh-hans 下载musescore（一个制谱软件）。然后自己做一个五线谱，导出为不压缩的nusicxml格式。  
 ![image](https://user-images.githubusercontent.com/120734145/208136371-0fdded23-b1de-4388-8392-9f64795eaab0.png)   
-该文件中有两个标签为score-partwise，我们将其改为scorepartwise。  
 该项目需要用npm包管理工具，依赖项在package.json文件中已给出，执行命令 `npm i`  
 依赖项添加完成后再执行`npm start`  
 待项目构建完成后，在 http://localhost:8080 端口即可看到项目效果。
