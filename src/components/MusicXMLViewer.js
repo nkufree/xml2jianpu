@@ -16,8 +16,7 @@ function isLink(str) {
 /**
  * 可被 Vue 组件调用的初始化函数。
  * @param {SVGSVGElement} svgElement - 宿主 <svg> 节点
- * @param {Object} [opts]
- * @param {string} [opts.url] - 覆盖默认的 musicxml 资源 URL
+ * @param {string} [url] - 覆盖默认的 musicxml 资源 URL
  */
 export default async function initApp(svgElement, url) {
     console.log("url", url);
