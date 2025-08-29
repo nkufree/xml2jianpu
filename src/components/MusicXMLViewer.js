@@ -4,24 +4,37 @@ import { XMLParser } from "fast-xml-parser";
 // 如果用的是 Vite，建议在静态资源后加 ?url 来确保拿到资源 URL
 // import triColorUrl from "../assets/tricolor.musicxml?url";
 
+function isLink(str) {
+  try {
+    new URL(str)
+    return true
+  } catch {
+    return false
+  }
+}
+
 /**
  * 可被 Vue 组件调用的初始化函数。
  * @param {SVGSVGElement} svgElement - 宿主 <svg> 节点
  * @param {Object} [opts]
  * @param {string} [opts.url] - 覆盖默认的 musicxml 资源 URL
  */
-export default async function initApp(svgElement, opts = {}) {
-  const { url } = opts;
-
+export default async function initApp(svgElement, url) {
+    console.log("url", url);
   // 1) 清理旧内容，避免重复渲染叠加
   d3.select(svgElement).selectAll("*").remove();
 
   try {
-    // 2) 拉取 XML 文档
-    const xmlDoc = await d3.xml(url); // 返回 Document
+    if(isLink(url))
+    {
+        const xmlDoc = await d3.xml(url); // 返回 Document
 
-    // 3) 如果你需要 fast-xml-parser 的对象结果，先把 Document 序列化为字符串再解析
-    const xmlString = new XMLSerializer().serializeToString(xmlDoc);
+        var xmlString = new XMLSerializer().serializeToString(xmlDoc);
+    }
+    else
+    {
+        xmlString = url;
+    }
     const parser = new XMLParser({
       ignoreAttributes: false,
       attributeNamePrefix: "@_",
