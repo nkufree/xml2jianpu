@@ -9,3 +9,4 @@
 依赖项添加完成后再执行`npm run serve`  
 待项目构建完成后，在 http://localhost:8080 端口即可看到项目效果。
 
+也可以在网页[https://nkufree.github.io/xml2jianpu/](https://nkufree.github.io/xml2jianpu/)在线查看效果。
